@@ -8,7 +8,7 @@
           "Principal": "*",
           "Action": "s3:PutObject",
           "Resource": [
-              "arn:aws:s3:::${bucket}/*"
+              "arn:aws:s3:::${bucket}*"
           ],
           "Condition": {
               "Null": {
@@ -22,7 +22,7 @@
           "Principal": "*",
           "Action": "s3:PutObject",
           "Resource": [
-              "arn:aws:s3:::${bucket}/*"
+              "arn:aws:s3:::${bucket}*"
           ],
           "Condition": {
               "StringEquals": {
@@ -36,7 +36,7 @@
           "Principal": "*",
           "Action": "s3:PutObject",
           "Resource": [
-              "arn:aws:s3:::${bucket}/*"
+              "arn:aws:s3:::${bucket}*"
           ],
           "Condition": {
               "StringNotLikeIfExists": {

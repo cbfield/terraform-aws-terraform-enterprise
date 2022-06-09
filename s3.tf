@@ -1,8 +1,9 @@
 resource "aws_s3_bucket" "storage_bucket" {
-  bucket = "voynich-${var.name}"
-  acl    = "private"
+  bucket_prefix = var.name
+  acl           = "private"
+
   policy = templatefile("${path.module}/templates/s3-bucket-policy.json.tpl", {
-    bucket  = "voynich-${var.name}"
+    bucket  = var.name
     kms_key = module.s3_encryption_key.kms_key.arn
   })
 

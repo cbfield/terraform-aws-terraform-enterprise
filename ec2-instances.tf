@@ -7,6 +7,17 @@ resource "aws_launch_configuration" "launch_config" {
   name_prefix                 = var.name
   security_groups             = [aws_security_group.instances.id]
   user_data = templatefile("${path.module}/templates/ec2-user-data.sh.tpl", {
+    domain_name       = var.domain_name
+    license_secret_id = var.license_key_secret
+    region            = data.aws_region.current.name
+    secrets_id        = aws_secretsmanager_secret.secrets.id
+    worker_image      = var.worker_image
+
+    replicated_settings = templatefile("${path.module}/templates/ec2-replicated-settings.json.tpl", {
+      hostname       = var.domain_name
+      release_number = var.release_number
+    })
+
     tfe_settings = templatefile("${path.module}/templates/ec2-tfe-settings.json.tpl", {
       capacity_concurrency = var.run_config.concurrency
       capacity_memory      = var.run_config.memory_mb
@@ -19,16 +30,7 @@ resource "aws_launch_configuration" "launch_config" {
       s3_bucket            = aws_s3_bucket.storage_bucket.bucket
       s3_kms_key           = module.s3_encryption_key.kms_key.arn
       tbw_image            = var.worker_image == "hashicorp/build-worker:now" ? "default_image" : "custom_image"
-    }),
-    replicated_settings = templatefile("${path.module}/templates/ec2-replicated-settings.json.tpl", {
-      hostname       = var.domain_name
-      release_number = var.release_number
     })
-    worker_image      = var.worker_image
-    domain_name       = var.domain_name
-    license_secret_id = var.license_key_secret
-    region            = data.aws_region.current.name
-    secrets_id        = aws_secretsmanager_secret.secrets.id
   })
 
   metadata_options {
@@ -85,7 +87,7 @@ resource "aws_autoscaling_group" "instances" {
     },
     {
       key                 = "Storage Bucket"
-      value               = "s3://${aws_s3_bucket.storage_bucket.bucket}/"
+      value               = "s3://${aws_s3_bucket.storage_bucket.id}/"
       propagate_at_launch = true
     },
   ]

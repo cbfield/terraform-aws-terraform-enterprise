@@ -1,5 +1,5 @@
 resource "aws_secretsmanager_secret" "secrets" {
-  name        = "${var.name}-secrets"
+  name        = var.name
   description = "keys and passwords for ${var.name} to connect to peripheral resources"
 
   tags = {
