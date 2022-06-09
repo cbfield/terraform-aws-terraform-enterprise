@@ -3,14 +3,14 @@ resource "aws_iam_role" "instance_role" {
   assume_role_policy = file("${path.module}/files/assume-role-policy.json")
 
   inline_policy {
-    name = "${var.name}-s3"
+    name = "s3-object-readwrite"
     policy = templatefile("${path.module}/templates/iam-s3.json.tpl", {
       bucket = aws_s3_bucket.storage_bucket.arn
     })
   }
 
   inline_policy {
-    name = "${var.name}-secrets"
+    name = "secrets-manager-getsecretvalue"
     policy = templatefile("${path.module}/templates/iam-secrets.json.tpl", {
       secrets = jsonencode([
         aws_secretsmanager_secret.secrets.arn,
