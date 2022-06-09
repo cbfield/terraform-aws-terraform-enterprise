@@ -10,7 +10,7 @@ resource "aws_iam_role" "instance_role" {
   }
 
   inline_policy {
-    name = "secrets-manager-getsecretvalue"
+    name = "secretsmanager-getsecretvalue"
     policy = templatefile("${path.module}/templates/iam-secrets.json.tpl", {
       secrets = jsonencode([
         aws_secretsmanager_secret.secrets.arn,
