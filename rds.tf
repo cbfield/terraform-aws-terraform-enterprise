@@ -9,7 +9,6 @@ resource "aws_db_instance" "postgresql" {
   engine_version             = var.db.engine_version
   identifier                 = var.name
   instance_class             = var.db.node_type
-  kms_key_id                 = module.database_encryption_key.kms_key.arn
   multi_az                   = true
   name                       = "terraform"
   password                   = random_password.postgresql_admin_password.result
@@ -17,6 +16,11 @@ resource "aws_db_instance" "postgresql" {
   storage_encrypted          = true
   username                   = "administrator"
   vpc_security_group_ids     = [aws_security_group.database.id]
+
+  kms_key_id = coalesce(
+    var.db.kms_key_arn,
+    try(module.database_encryption_key[0].kms_key.arn, null)
+  )
 
   lifecycle {
     ignore_changes = [latest_restorable_time]

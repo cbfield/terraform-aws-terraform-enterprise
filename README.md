@@ -1,7 +1,8 @@
 # TODO
 
- - KMS variables
- - license key vs secret variable
+ - ssh/ ec2 key variable
+ - tag variables/ attributes
+ - license key variable
  - Examples
 
 # Terraform Enterprise

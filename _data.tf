@@ -18,6 +18,7 @@ data "aws_ami" "ami" {
   owners = var.ami.owners
 }
 
+# To retrieve CIDRs, used in TFE application configuration
 data "aws_subnet" "instance_subnets" {
   for_each = toset(var.instances.subnets)
 

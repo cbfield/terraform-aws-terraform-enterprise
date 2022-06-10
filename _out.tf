@@ -4,7 +4,7 @@ output "acm_cert_arn" {
 }
 
 output "ami" {
-  description = "The given value for var.ami"
+  description = "The value provided for var.ami"
   value       = var.ami
 }
 
@@ -38,7 +38,7 @@ output "db_admin_password" {
 }
 
 output "domain_name" {
-  description = "The given value for var.domain_name"
+  description = "The value provided for var.domain_name"
   value       = var.domain_name
 }
 
@@ -53,7 +53,7 @@ output "instance_profile" {
 }
 
 output "instance_profile_policies" {
-  description = "The given value for var.instance_profile_policies"
+  description = "The value provided for var.instance_profile_policies"
   value       = var.instance_profile_policies
 }
 
@@ -63,16 +63,25 @@ output "instance_role" {
 }
 
 output "instances" {
-  description = "The given value for var.instances"
+  description = "The value provided for var.instances"
   value       = var.instances
 }
 
 output "kms_keys" {
   description = "KMS keys used by the module"
   value = {
-    s3       = module.s3_encryption_key
-    database = module.database_encryption_key
-    redis    = module.redis_encryption_key
+    database = coalesce(
+      var.db.kms_key_arn,
+      try(module.database_encryption_key[0].kms_key.arn, null)
+    )
+    redis = coalesce(
+      var.redis.kms_key_arn,
+      try(module.redis_encryption_key[0].kms_key.arn, null)
+    )
+    s3 = coalesce(
+      var.s3.kms_key_arn,
+      try(module.s3_encryption_key[0].kms_key.arn, null)
+    )
   }
 }
 
@@ -97,7 +106,7 @@ output "load_balancer" {
 }
 
 output "name" {
-  description = "The given value for var.name"
+  description = "The value provided for var.name"
   value       = var.name
 }
 
@@ -126,7 +135,7 @@ output "release_number" {
 }
 
 output "run_config" {
-  description = "The provided value for var.run_config"
+  description = "The value provided for var.run_config"
   value       = var.run_config
 }
 
@@ -156,7 +165,7 @@ output "ssh_key" {
 }
 
 output "vpc_id" {
-  description = "The given value for var.vpc_id"
+  description = "The value provided for var.vpc_id"
   value       = var.vpc_id
 }
 

@@ -22,6 +22,7 @@ variable "db" {
     allocated_storage = number
     bastion_sg        = string
     engine_version    = string
+    kms_key_arn       = optional(string)
     node_type         = string
     subnets           = list(string)
   })
@@ -58,7 +59,7 @@ variable "license_key_secret" {
 }
 
 variable "load_balancer" {
-  description = "CIDRs to allow traffic from (internal!), and subnets to place the load balancer in"
+  description = "CIDRs from which to allow traffic, and subnets to place the load balancer in"
   type = object({
     ingress_cidrs = list(string)
     subnets       = list(string)
@@ -66,7 +67,7 @@ variable "load_balancer" {
 }
 
 variable "name" {
-  description = "The name prefix to assign to all resources"
+  description = "The name to assign to all resources created by the module"
   type        = string
   default     = "terraform-enterprise"
 }
@@ -75,6 +76,7 @@ variable "redis" {
   description = "Properties to assign to the Redis cache used by the application"
   type = object({
     engine_version = string
+    kms_key_arn    = optional(string)
     node_type      = string
     subnets        = list(string)
   })
@@ -96,6 +98,15 @@ variable "run_config" {
     memory_mb   = 512
     concurrency = 10
   }
+}
+
+variable "s3" {
+  description = "Configurations for the S3 bucket used by Terraform Enterprise"
+  type = object({
+    bucket_policy = optional(string)
+    kms_key_arn   = optional(string)
+  })
+  default = {}
 }
 
 variable "vpc_id" {

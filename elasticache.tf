@@ -4,7 +4,6 @@ resource "aws_elasticache_replication_group" "redis_cache" {
   auth_token                    = random_password.redis_auth_token.result
   automatic_failover_enabled    = true
   engine_version                = var.redis.engine_version
-  kms_key_id                    = module.redis_encryption_key.kms_key.arn
   multi_az_enabled              = true
   node_type                     = var.redis.node_type
   number_cache_clusters         = length(var.redis.subnets)
@@ -13,6 +12,11 @@ resource "aws_elasticache_replication_group" "redis_cache" {
   security_group_ids            = [aws_security_group.redis.id]
   subnet_group_name             = aws_elasticache_subnet_group.redis.name
   transit_encryption_enabled    = true
+
+  kms_key_id = coalesce(
+    var.redis.kms_key_arn,
+    try(module.redis_encryption_key[0].kms_key.arn, null)
+  )
 
   tags = {
     "Managed By Terraform" = "true"

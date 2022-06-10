@@ -3,15 +3,21 @@ resource "aws_s3_bucket" "storage_bucket" {
   acl           = "private"
 
   policy = templatefile("${path.module}/templates/s3-bucket-policy.json.tpl", {
-    bucket  = var.name
-    kms_key = module.s3_encryption_key.kms_key.arn
+    bucket = var.name
+    kms_key = coalesce(
+      var.s3.kms_key_arn,
+      try(module.s3_encryption_key.kms_key.arn, null)
+    )
   })
 
   server_side_encryption_configuration {
     rule {
       apply_server_side_encryption_by_default {
-        sse_algorithm     = "aws:kms"
-        kms_master_key_id = module.s3_encryption_key.kms_key.arn
+        sse_algorithm = "aws:kms"
+        kms_master_key_id = coalesce(
+          var.s3.kms_key_arn,
+          try(module.s3_encryption_key[0].kms_key.arn, null)
+        )
       }
     }
   }
