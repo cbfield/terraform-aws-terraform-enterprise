@@ -159,8 +159,8 @@ output "security_groups" {
 }
 
 output "ssh_key" {
-  description = "The key PEM used to generate the EC2 key for SSH authentication on the instances"
-  value       = tls_private_key.ssh_key
+  description = "The SSH key used to access the instances, if created by the module"
+  value       = one(tls_private_key.ssh_key)
   sensitive   = true
 }
 

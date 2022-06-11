@@ -45,11 +45,12 @@ variable "instance_profile_policies" {
 variable "instances" {
   description = "Configurations of the autoscaling group that manages the instances"
   type = object({
-    bastion_sg = string
-    max        = number
-    min        = number
-    subnets    = list(string)
-    type       = string
+    bastion_sg     = string
+    max            = number
+    min            = number
+    subnets        = list(string)
+    ssh_public_key = optional(string)
+    type           = string
   })
 }
 

@@ -1,6 +1,5 @@
 # TODO
 
- - ssh/ ec2 key variable
  - tag variables/ attributes
  - license key variable
  - Examples
