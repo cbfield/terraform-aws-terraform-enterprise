@@ -43,8 +43,11 @@ output "db" {
 
 output "db_admin_password" {
   description = "The password for the admin user in the database"
-  value       = random_password.postgresql_admin_password
-  sensitive   = true
+  value = coalesce(
+    var.pg_pwd_admin,
+    one(random_password.postgresql_admin_password[0].result)
+  )
+  sensitive = true
 }
 
 output "domain_name" {
@@ -106,9 +109,12 @@ output "load_balancer" {
     balancer = aws_lb.load_balancer
     listeners = {
       "80"  = aws_lb_listener.port_80
-      "443" = aws_lb_listener.port_443
+      "443" = try(aws_lb_listener.port_443, null)
     }
-    ssl_cert = var.acm_cert_arn == "" ? aws_acm_certificate.cert.0 : null
+    ssl_cert = coalesce(
+      var.acm_cert_arn,
+      try(module.acm_cert[0].certificate.arn, null)
+    )
     target_groups = {
       port_443 = aws_lb_target_group.port_443
     }
@@ -118,11 +124,6 @@ output "load_balancer" {
 output "name" {
   description = "The value provided for var.name"
   value       = var.name
-}
-
-output "private_ca" {
-  description = "The value provided for var.private_ca"
-  value       = var.private_ca
 }
 
 output "redis" {
@@ -135,8 +136,11 @@ output "redis" {
 
 output "redis_auth_token" {
   description = "The auth token used to communicate with the Redis cache"
-  value       = random_password.redis_auth_token
-  sensitive   = true
+  value = coalesce(
+    var.secrets.redis_pwd,
+    try(random_password.redis_auth_token[0].result, null)
+  )
+  sensitive = true
 }
 
 output "release_number" {

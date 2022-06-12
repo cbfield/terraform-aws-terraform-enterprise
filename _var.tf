@@ -132,6 +132,18 @@ variable "s3" {
   default = {}
 }
 
+variable "secrets" {
+  description = "Optional override values for secrets used by the module"
+  type = object({
+    enc_key          = optional(string)
+    pg_pwd_admin     = optional(string)
+    pg_pwd_terraform = optional(string)
+    redis_pwd        = optional(string)
+    tags             = optional(map(string))
+  })
+  default = {}
+}
+
 variable "vpc_id" {
   description = "The ID of the VPC in which to create these resources"
   type        = string
