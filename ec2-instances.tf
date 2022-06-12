@@ -28,11 +28,12 @@ resource "aws_launch_configuration" "launch_config" {
       redis_host           = aws_elasticache_replication_group.redis_cache.primary_endpoint_address
       region               = data.aws_region.current.name
       s3_bucket            = aws_s3_bucket.storage_bucket.bucket
+      tbw_image            = var.worker_image == "hashicorp/build-worker:now" ? "default_image" : "custom_image"
+
       s3_kms_key = coalesce(
         var.s3.kms_key_arn,
         try(module.s3_encryption_key[0].kms_key.arn, null)
       )
-      tbw_image = var.worker_image == "hashicorp/build-worker:now" ? "default_image" : "custom_image"
     })
   })
 
