@@ -3,6 +3,16 @@ output "acm_cert_arn" {
   value       = var.acm_cert_arn
 }
 
+output "acm" {
+  description = "The value provided for var.acm"
+  value       = var.acm
+}
+
+output "acm_cert" {
+  description = "The ACM certificate created by the module"
+  value       = one(module.acm_cert)
+}
+
 output "ami" {
   description = "The value provided for var.ami"
   value       = var.ami

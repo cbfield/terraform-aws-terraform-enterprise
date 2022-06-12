@@ -3,7 +3,6 @@
  - tag var for secrets
  - var for overriding secrets
  - var for license key string
- - default ACM cert
  - Examples
 
 # Terraform Enterprise

@@ -1,7 +1,24 @@
 variable "acm_cert_arn" {
-  description = "An ACM cert to use to encrypt traffic to TFE"
+  description = <<-EOF
+    The ARN of an ACM certificate that the module will use to encrypt traffic to TFE
+    If provided, the module will not create its own cert. Conflicts with var.acm
+  EOF
   type        = string
-  default     = ""
+  default     = null
+}
+
+variable "acm" {
+  description = <<-EOF
+    Configurations for the ACM certificate created by the module
+    Conflicts with var.acm_cert_arn
+  EOF
+  type = object({
+    tags              = optional(map(string))
+    validate          = optional(bool)
+    validation_method = optional(string)
+    zone_id           = string
+  })
+  default = null
 }
 
 variable "ami" {

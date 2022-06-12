@@ -17,22 +17,41 @@ resource "aws_lb_listener" "port_80" {
   port              = "80"
   protocol          = "HTTP"
 
-  default_action {
-    type = "redirect"
-    redirect {
-      port        = "443"
-      protocol    = "HTTPS"
-      status_code = "HTTP_301"
+  dynamic "default_action" {
+    for_each = var.acm_cert_arn != null || var.acm != null ? [1] : []
+
+    content {
+      type = "redirect"
+      redirect {
+        port        = "443"
+        protocol    = "HTTPS"
+        status_code = "HTTP_301"
+      }
+    }
+  }
+
+  dynamic "default_action" {
+    for_each = var.acm_cert_arn == null && var.acm == null ? [1] : []
+
+    content {
+      type             = "forward"
+      target_group_arn = aws_lb_target_group.port_443.arn
     }
   }
 }
 
 resource "aws_lb_listener" "port_443" {
+  count = var.acm_cert_arn != null || var.acm != null ? 1 : 0
+
   load_balancer_arn = aws_lb.load_balancer.arn
   port              = "443"
   protocol          = "HTTPS"
-  certificate_arn   = var.acm_cert_arn
   ssl_policy        = "ELBSecurityPolicy-TLS-1-2-Ext-2018-06"
+
+  certificate_arn = coalesce(
+    var.acm_cert_arn,
+    try(module.acm_cert[0].certificate.arn, null)
+  )
 
   default_action {
     type             = "forward"
