@@ -58,7 +58,7 @@ resource "aws_autoscaling_group" "instances" {
   target_group_arns    = [aws_lb_target_group.port_443.arn]
   vpc_zone_identifier  = var.instances.subnets
 
-  tags = [
+  tags = flatten([
     {
       key                 = "PostgreSQL Database"
       value               = "postgresql://terraform@${aws_db_instance.postgresql.address}:5432/terraform"
@@ -94,7 +94,14 @@ resource "aws_autoscaling_group" "instances" {
       value               = "s3://${aws_s3_bucket.storage_bucket.id}/"
       propagate_at_launch = true
     },
-  ]
+    ], [
+    for k, v in var.instances.tags : {
+      key                 = k
+      value               = v
+      propagate_at_launch = true
+    }
+    ]
+  )
 
   lifecycle {
     create_before_destroy = true

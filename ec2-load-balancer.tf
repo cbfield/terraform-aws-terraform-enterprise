@@ -6,6 +6,10 @@ resource "aws_lb" "load_balancer" {
   load_balancer_type               = "application"
   security_groups                  = [aws_security_group.load_balancer.id]
   subnets                          = var.load_balancer.subnets
+
+  tags = merge(var.load_balancer.tags, {
+    "Managed By Terraform" = "true"
+  })
 }
 
 resource "aws_lb_listener" "port_80" {

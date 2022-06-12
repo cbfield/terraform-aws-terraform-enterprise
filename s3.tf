@@ -22,9 +22,9 @@ resource "aws_s3_bucket" "storage_bucket" {
     }
   }
 
-  tags = {
+  tags = merge(var.s3.tags, {
     "Managed By Terraform" = "true"
-  }
+  })
 }
 
 resource "aws_s3_bucket_public_access_block" "block_public_access" {

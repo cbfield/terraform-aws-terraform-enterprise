@@ -5,6 +5,7 @@ module "s3_encryption_key" {
 
   alias     = "${var.name}-s3"
   key_users = [aws_iam_role.instance_role.arn]
+  tags      = var.s3.tags
 }
 
 module "database_encryption_key" {
@@ -13,6 +14,7 @@ module "database_encryption_key" {
   count   = var.db.kms_key_arn == null ? 1 : 0
 
   alias = "${var.name}-database"
+  tags  = var.db.tags
 }
 
 module "redis_encryption_key" {
@@ -21,4 +23,5 @@ module "redis_encryption_key" {
   count   = var.redis.kms_key_arn == null ? 1 : 0
 
   alias = "${var.name}-redis"
+  tags  = var.redis.tags
 }

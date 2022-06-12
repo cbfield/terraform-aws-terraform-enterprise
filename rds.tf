@@ -26,16 +26,16 @@ resource "aws_db_instance" "postgresql" {
     ignore_changes = [latest_restorable_time]
   }
 
-  tags = {
+  tags = merge(var.db.tags, {
     "Managed By Terraform" = "true"
-  }
+  })
 }
 
 resource "aws_db_subnet_group" "postgresql" {
   name       = var.name
   subnet_ids = var.db.subnets
 
-  tags = {
+  tags = merge(var.db.tags, {
     "Managed By Terraform" = "true"
-  }
+  })
 }

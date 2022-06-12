@@ -25,6 +25,7 @@ variable "db" {
     kms_key_arn       = optional(string)
     node_type         = string
     subnets           = list(string)
+    tags              = optional(map(string))
   })
 }
 
@@ -50,6 +51,7 @@ variable "instances" {
     min            = number
     subnets        = list(string)
     ssh_public_key = optional(string)
+    tags           = optional(map(string))
     type           = string
   })
 }
@@ -64,6 +66,7 @@ variable "load_balancer" {
   type = object({
     ingress_cidrs = list(string)
     subnets       = list(string)
+    tags          = optional(map(string))
   })
 }
 
@@ -80,6 +83,7 @@ variable "redis" {
     kms_key_arn    = optional(string)
     node_type      = string
     subnets        = list(string)
+    tags           = optional(map(string))
   })
 }
 
@@ -106,6 +110,7 @@ variable "s3" {
   type = object({
     bucket_policy = optional(string)
     kms_key_arn   = optional(string)
+    tags          = optional(map(string))
   })
   default = {}
 }

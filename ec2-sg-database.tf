@@ -3,10 +3,10 @@ resource "aws_security_group" "database" {
   description = "Manages connections to ${var.name} database"
   vpc_id      = var.vpc_id
 
-  tags = {
+  tags = merge(var.db.tags, {
     "Name"                 = "${var.name}-database",
     "Managed By Terraform" = "true"
-  }
+  })
 }
 
 resource "aws_security_group_rule" "database_ingress_5432_instances" {
