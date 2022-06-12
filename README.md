@@ -2,6 +2,7 @@
 
  - tag variables/ attributes
  - license key variable
+ - default ACM cert
  - Examples
 
 # Terraform Enterprise
