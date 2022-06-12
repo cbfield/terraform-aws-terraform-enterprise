@@ -10,6 +10,8 @@ variable "acm_cert_arn" {
 variable "acm" {
   description = <<-EOF
     Configurations for the ACM certificate created by the module
+    var.acm.zone_id is the ID of a Route 53 hosted zone in which validation
+    records will be created to dns-validate the certificate
     Conflicts with var.acm_cert_arn
   EOF
   type = object({

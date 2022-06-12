@@ -1,6 +1,8 @@
 # TODO
 
   - validations for some variables (mostly string formatting)
+  - var.instances optional attributes
+  - better bastion_sg variable situation
   - Examples
 
 # Terraform Enterprise

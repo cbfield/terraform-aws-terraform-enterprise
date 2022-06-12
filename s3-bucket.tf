@@ -2,13 +2,16 @@ resource "aws_s3_bucket" "storage_bucket" {
   bucket_prefix = var.name
   acl           = "private"
 
-  policy = templatefile("${path.module}/templates/s3-bucket-policy.json.tpl", {
-    bucket = var.name
-    kms_key = coalesce(
-      var.s3.kms_key_arn,
-      try(module.s3_encryption_key.kms_key.arn, null)
-    )
-  })
+  policy = coalesce(
+    try(var.s3.bucket_policy, null),
+    templatefile("${path.module}/templates/s3-bucket-policy.json.tpl", {
+      bucket = var.name
+      kms_key = coalesce(
+        var.s3.kms_key_arn,
+        try(module.s3_encryption_key.kms_key.arn, null)
+      )
+    })
+  )
 
   server_side_encryption_configuration {
     rule {
@@ -22,7 +25,7 @@ resource "aws_s3_bucket" "storage_bucket" {
     }
   }
 
-  tags = merge(var.s3.tags, {
+  tags = merge(try(var.s3.tags, null), {
     "Managed By Terraform" = "true"
   })
 }
