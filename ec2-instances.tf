@@ -7,11 +7,15 @@ resource "aws_launch_configuration" "launch_config" {
   name_prefix                 = var.name
   security_groups             = [aws_security_group.instances.id]
   user_data = templatefile("${path.module}/templates/ec2-user-data.sh.tpl", {
-    domain_name       = var.domain_name
-    license_secret_id = var.license_key_secret
-    region            = data.aws_region.current.name
-    secrets_id        = aws_secretsmanager_secret.secrets.id
-    worker_image      = var.worker_image
+    domain_name  = var.domain_name
+    region       = data.aws_region.current.name
+    secrets_id   = aws_secretsmanager_secret.secrets.id
+    worker_image = var.worker_image
+
+    license_secret_id = coalesce(
+      var.license_key_secret,
+      aws_secretsmanager_secret.secrets.id
+    )
 
     replicated_settings = templatefile("${path.module}/templates/ec2-replicated-settings.json.tpl", {
       hostname       = var.domain_name

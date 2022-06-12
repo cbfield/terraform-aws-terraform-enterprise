@@ -1,7 +1,7 @@
 # TODO
 
- - var for license key string
- - Examples
+  - validations for some variables (mostly string formatting)
+  - Examples
 
 # Terraform Enterprise
 

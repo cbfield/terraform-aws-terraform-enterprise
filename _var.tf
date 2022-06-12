@@ -78,8 +78,10 @@ variable "instances" {
 
 variable "license_key_secret" {
   description = <<-EOF
-    The ARN of a Secrets Manager secret containing the .rli file for the TFE license
-    Value must be accessed under key `license_key` in JSON secret
+    The ARN of a Secrets Manager secret containing the .rli file for the TFE license.
+    Value must be accessed under the key `license_key` in JSON secret.
+    Use this when the (base64-encoded) license key is too long to store in a sensitive
+    variable in a TFE workspace.
     Conflicts with var.license_key_string
   EOF
   type        = string

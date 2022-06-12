@@ -10,7 +10,7 @@ resource "aws_secretsmanager_secret" "secrets" {
 
 resource "aws_secretsmanager_secret_version" "secret_values" {
   secret_id = aws_secretsmanager_secret.secrets.id
-  secret_string = jsonencode({
+  secret_string = jsonencode(merge({
     db_password = coalesce(
       var.secrets.pg_pwd_terraform,
       try(random_password.postgresql_terraform_password[0].result, null)
@@ -23,7 +23,9 @@ resource "aws_secretsmanager_secret_version" "secret_values" {
       var.secrets.redis_pwd,
       try(random_password.redis_auth_token[0].result, null)
     )
-  })
+    }, var.license_key_string != null ? {
+    license_key = var.license_key_string
+  } : {}))
 }
 
 resource "random_uuid" "encryption_key" {
