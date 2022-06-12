@@ -51,13 +51,16 @@ variable "domain_name" {
   type        = string
 }
 
-variable "instance_profile_policies" {
-  description = "IAM policies to attach to the instance profile that is used by the instances"
-  type = list(object({
-    name   = string
-    policy = string
-  }))
-  default = []
+variable "iam" {
+  description = "IAM policies to associate with TFE's instance profile, and tags to assign to its role"
+  type = object({
+    policies = optional(list(object({
+      name   = string
+      policy = string
+    })))
+    tags = optional(map(string))
+  })
+  default = {}
 }
 
 variable "instances" {
@@ -74,8 +77,26 @@ variable "instances" {
 }
 
 variable "license_key_secret" {
-  description = "The ARN of a Secrets Manager secret containing the .rli file for the TFE license"
+  description = <<-EOF
+    The ARN of a Secrets Manager secret containing the .rli file for the TFE license
+    Value must be accessed under key `license_key` in JSON secret
+    Conflicts with var.license_key_string
+  EOF
   type        = string
+  default     = null
+}
+
+variable "license_key_string" {
+  description = <<-EOF
+    Base64-encoded string containing the TFE license key
+    Conflicts with var.license_key_secret
+  EOF
+  type        = string
+  default     = null
+  validation {
+    condition     = can(base64decode(var.license_key_string))
+    error_message = "This value must be base64-encoded"
+  }
 }
 
 variable "load_balancer" {

@@ -20,13 +20,19 @@ resource "aws_iam_role" "instance_role" {
   }
 
   dynamic "inline_policy" {
-    for_each = { for policy in var.instance_profile_policies : policy.name => policy }
+    for_each = var.iam.policies == null ? {} : {
+      for policy in var.iam.policies : policy.name => policy
+    }
 
     content {
       name   = each.key
       policy = each.value.policy
     }
   }
+
+  tags = merge(var.iam.tags, {
+    "Managed By Terraform" = "true"
+  })
 }
 
 resource "aws_iam_instance_profile" "instance_profile" {

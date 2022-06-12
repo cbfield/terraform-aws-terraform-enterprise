@@ -5,7 +5,7 @@ yum install -y jq amazon-ecr-credential-helper
 
 # Get secrets from Secrets Manager
 enc_password=`aws secretsmanager get-secret-value --secret-id ${secrets_id} --query SecretString --output text --region ${region} | jq -r .encryption_key`
-license=`aws secretsmanager get-secret-value --secret-id ${license_secret_id} --query SecretString --output text --region ${region}`
+license=`aws secretsmanager get-secret-value --secret-id ${license_secret_id} --query SecretString --output text --region ${region} | jq -r .license_key`
 pg_password=`aws secretsmanager get-secret-value --secret-id ${secrets_id} --query SecretString --output text --region ${region} | jq -r .db_password`
 redis_password=`aws secretsmanager get-secret-value --secret-id ${secrets_id} --query SecretString --output text --region ${region} | jq -r .redis_auth_token`
 replicated_pwd=`aws secretsmanager get-secret-value --secret-id ${secrets_id} --query SecretString --output text --region ${region} | jq -r .replicated_daemon_password`
