@@ -1,5 +1,5 @@
 module "acm_cert" {
-  source  = "app.terraform.io/Bucketmeadow/acm-certificate/aws"
+  source  = "app.terraform.io/cbfield/acm-certificate/aws"
   version = "1.0.0"
   count   = var.acm_cert_arn == null && var.acm != null ? 1 : 0
 

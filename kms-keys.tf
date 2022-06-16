@@ -1,5 +1,5 @@
 module "s3_encryption_key" {
-  source  = "app.terraform.io/Bucketmeadow/kms-key/aws"
+  source  = "app.terraform.io/cbfield/kms-key/aws"
   version = "1.0.0"
   count   = var.s3.kms_key_arn == null ? 1 : 0
 
@@ -9,7 +9,7 @@ module "s3_encryption_key" {
 }
 
 module "database_encryption_key" {
-  source  = "app.terraform.io/Bucketmeadow/kms-key/aws"
+  source  = "app.terraform.io/cbfield/kms-key/aws"
   version = "1.0.0"
   count   = var.db.kms_key_arn == null ? 1 : 0
 
@@ -18,7 +18,7 @@ module "database_encryption_key" {
 }
 
 module "redis_encryption_key" {
-  source  = "app.terraform.io/Bucketmeadow/kms-key/aws"
+  source  = "app.terraform.io/cbfield/kms-key/aws"
   version = "1.0.0"
   count   = var.redis.kms_key_arn == null ? 1 : 0
 
