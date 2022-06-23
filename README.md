@@ -3,6 +3,7 @@
   - validations for some variables (mostly string formatting)
   - var.instances optional attributes
   - better bastion_sg variable situation
+  - option to use existing IAM resources
   - Examples
 
 # Terraform Enterprise
